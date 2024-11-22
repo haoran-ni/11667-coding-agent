@@ -7,7 +7,7 @@ The running tests are done on NERSC. Please make sure `cudatoolkit/12.4` is load
 ```
 conda create --name cmu-llms-final python=3.11
 conda activate cmu-llms-final
-pip install -r requirements.py
+pip install -r requirements.txt
 login wandb
 ```
 Please note that the environment may be updated frequently, so be sure to check and update your conda environment when there are new commits to the repo.
