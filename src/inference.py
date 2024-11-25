@@ -1,53 +1,22 @@
 import argparse
 import os
-from dataclasses import dataclass
-from typing import Literal
 
 import evaluate
 import math
-import torch
 from datasets import load_dataset
 from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, HfArgumentParser, \
     BitsAndBytesConfig
 from trl import SFTTrainer
 
-
-@dataclass
-class ModelConfig:
-    model_name: str
-    dataset_name: str
-    dataset_split: str
-
-
-@dataclass
-class CustomBnBConfig:
-    load_in_4bit: bool
-    bnb_4bit_quant_type: str
-    bnb_4bit_compute_dtype: str
-    bnb_4bit_use_double_quant: bool
-
-
-@dataclass
-class CustomLoRAConfig:
-    lora_r: int
-    # lora_target_modules: str
-    lora_alpha: int
-    lora_dropout: float
-    lora_bias: Literal["none", "all", "lora_only"]
-    lora_task_type: str
-
-
-@dataclass
-class SFTConfig:
-    sft_max_seq_length: int
-    sft_packing: bool
+from configuration import ModelConfig, CustomBnBConfig, CustomLoRAConfig, SFTConfig
+from templates import format_user_text, format_assistant_text
 
 
 def main():
     # Get config path
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", type=str, required=True, help="Path to the configuration file")
+    parser.add_argument("config", type=str, help="Path to the configuration file")  # Positional argument
     args = parser.parse_args()
     config_path = args.config
     os.environ["WANDB_PROJECT"] = "11667-llms-hw6"
@@ -64,32 +33,25 @@ def main():
     train_test_split = full_dataset.train_test_split(test_size=0.05, shuffle=True, seed=42)
 
     train_dataset = train_test_split['train']
+    if model_config.hp_tuning:
+        train_dataset = train_dataset.shuffle(seed=42).select(range(2000))
     eval_dataset = train_test_split['test']  # use as evaluation/test dataset
 
-    # Format the instruction using a template
-    def format_instruction(sample):
-        output_texts = []
+    # Format the dataset to be used in the instruct model
+    def format_instruct(sample):
+        output_json = []
         for i in range(len(sample['instruction'])):
-            text = f"""### Instruction:
-Use the Task below and the Input given to write the Response, which is a programming code that can solve the following Task:
-
-### Task:
-{sample['instruction'][i]}
-
-### Input:
-{sample['input'][i]}
-
-### Response:
-{sample['output'][i]}
-        """
-            output_texts.append(text)
-        return output_texts
+            user_text = format_user_text(sample['instruction'][i], sample['input'][i])
+            assistant_text = format_assistant_text(sample['output'][i])
+            row_json = [{"role": "user", "content": user_text}, {"role": "assistant", "content": assistant_text}]
+            output_json.append(row_json)
+        return tokenizer.apply_chat_template(output_json, tokenize=False)
 
     # BitsAndBytesConfig int-4 config
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=custom_bnb_config.load_in_4bit,
         bnb_4bit_quant_type=custom_bnb_config.bnb_4bit_quant_type,
-        bnb_4bit_compute_dtype=getattr(torch, custom_bnb_config.bnb_4bit_compute_dtype),
+        bnb_4bit_compute_dtype=custom_bnb_config.bnb_4bit_compute_dtype,
         bnb_4bit_use_double_quant=custom_bnb_config.bnb_4bit_use_double_quant
     )
 
@@ -97,7 +59,10 @@ Use the Task below and the Input given to write the Response, which is a program
     model = AutoModelForCausalLM.from_pretrained(model_config.model_name,
                                                  quantization_config=bnb_config,
                                                  low_cpu_mem_usage=True,
-                                                 use_cache=False)
+                                                 use_cache=False,
+                                                 attn_implementation=model_config.attn_implementation,
+                                                 device_map={"": 0}
+                                                 )
 
     # Load the tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_config.model_name)
@@ -146,9 +111,9 @@ Use the Task below and the Input given to write the Response, which is a program
         max_seq_length=sft_config.sft_max_seq_length,
         tokenizer=tokenizer,
         packing=sft_config.sft_packing,
-        formatting_func=format_instruction,
+        formatting_func=format_instruct,
         args=train_args,
-        # compute_metrics=dummy_compute_metrics
+        # compute_metrics=dummy_compute_metrics   # Memory leak: https://discuss.huggingface.co/t/cuda-out-of-memory-when-using-trainer-with-compute-metrics/2941/15
     )
 
     # Perform evaluation
