@@ -3,6 +3,7 @@ import os
 
 import evaluate
 import math
+import torch
 from datasets import load_dataset
 from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, HfArgumentParser, \
@@ -61,8 +62,16 @@ def main():
                                                  low_cpu_mem_usage=True,
                                                  use_cache=False,
                                                  attn_implementation=model_config.attn_implementation,
+                                                 torch_dtype=torch.bfloat16,
                                                  device_map={"": 0}
                                                  )
+
+    # model = AutoModelForCausalLM.from_pretrained(model_config.model_name,
+    #                                              use_cache=False,
+    #                                              attn_implementation=model_config.attn_implementation,
+    #                                              torch_dtype=torch.bfloat16,
+    #                                              device_map={"": 0}
+    #                                              )
 
     # Load the tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_config.model_name)

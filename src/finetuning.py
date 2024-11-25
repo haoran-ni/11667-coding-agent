@@ -59,6 +59,7 @@ def main():
                                                  quantization_config=bnb_config,
                                                  attn_implementation=model_config.attn_implementation,
                                                  use_cache=False,
+                                                 torch_dtype=torch.bfloat16,
                                                  device_map={"": 0})
 
     # Load the tokenizer
