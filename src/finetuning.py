@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 
 import torch
 from datasets import load_dataset
@@ -18,7 +19,7 @@ def main():
     parser.add_argument("config", type=str, help="Path to the configuration file")  # Positional argument
     args = parser.parse_args()
     config_path = args.config
-    os.environ["WANDB_PROJECT"] = "11667-llms-hw6"
+    os.environ["WANDB_PROJECT"] = "11667-llms-hw6-sft"
 
     # Parse configuration arguments
     hfparser = HfArgumentParser((ModelConfig, CustomBnBConfig, CustomLoRAConfig, SFTConfig, TrainingArguments))
@@ -28,13 +29,17 @@ def main():
     # Retrieve dataset
     full_dataset = load_dataset(model_config.dataset_name, split=model_config.dataset_split)
 
-    # Split dataset deterministically (e.g., 95% train, 5% validation)
-    train_test_split = full_dataset.train_test_split(test_size=0.05, shuffle=True, seed=42)
+    # Split dataset into train (95%), validation (4%), and test (1%)
+    train_val_split = full_dataset.train_test_split(test_size=0.05, shuffle=True, seed=42)
 
-    train_dataset = train_test_split['train']
+    val_test_split = train_val_split['test'].train_test_split(test_size=0.2, shuffle=True, seed=42)
+
+    train_dataset = train_val_split['train']
+    eval_dataset = val_test_split['train']
+    test_dataset = val_test_split['test']
+
     if model_config.hp_tuning:
         train_dataset = train_dataset.shuffle(seed=42).select(range(2000))
-    eval_dataset = train_test_split['test']  # use as evaluation/test dataset
 
     # Format the dataset to be used in the instruct model
     def format_instruct(sample):
@@ -57,6 +62,7 @@ def main():
     # Retrieve model
     model = AutoModelForCausalLM.from_pretrained(model_config.model_name,
                                                  quantization_config=bnb_config,
+                                                 low_cpu_mem_usage=True,
                                                  attn_implementation=model_config.attn_implementation,
                                                  use_cache=False,
                                                  torch_dtype=torch.bfloat16,
@@ -65,9 +71,9 @@ def main():
     # Load the tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_config.model_name)
 
-    # Add padding token
+    # Add padding token (https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_1/#-special-tokens-)
     if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.pad_token = "<|finetune_right_pad_id|>"
         tokenizer.padding_side = "right"
 
     # LoRA config based on QLoRA paper
@@ -95,12 +101,22 @@ def main():
 
     # Train
     print("Start Training")
+    # trainer.train(resume_from_checkpoint="./models/evaluate/placeholder_2/checkpoint-111")
     trainer.train()
     print("End Training")
+
+    # Perform evaluation
+    print("Evaluating the final model...")
+    eval_results = trainer.evaluate()
+
+    # Print evaluation results
+    print("Evaluation Results:", eval_results)
 
     # Save model
     trainer.save_model()
     print("Model saved")
+
+    sys.exit(0)
 
     # Empty VRAM to free up resources
     del model
@@ -115,7 +131,6 @@ def main():
     model = AutoPeftModelForCausalLM.from_pretrained(
         train_args.output_dir,
         low_cpu_mem_usage=True,
-        return_dict=True,
         torch_dtype=torch.bfloat16,
         device_map={"": 0},
     )

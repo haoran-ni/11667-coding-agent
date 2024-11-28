@@ -33,3 +33,12 @@ class CustomLoRAConfig:
 class SFTConfig:
     sft_max_seq_length: int
     sft_packing: bool
+
+
+@dataclass
+class EvaluationConfig:
+    eval_on_validation: bool
+    is_unmerged: bool
+    is_bnb: bool
+    ppl_only: bool
+    legacy_generation: bool
