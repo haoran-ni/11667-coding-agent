@@ -14,7 +14,23 @@ huggingface-cli login
 ```
 Please note that the environment may be updated frequently, so be sure to check and update your conda environment when there are new commits to the repo.
 
+### Fine-tuning
+To fine-tune the model, run the following command:
+```shell
+python src/finetuning.py configs/<training_config_file>
+```
+
+### Evaluation
+To evaluate the model, run the following command:
+```shell
+python src/inference.py configs/<inference_config_file> <name_or_path_to_the_model>
+```
+
 ## Hugging Face Repository
 This project is hosted on Hugging Face under the repository:
-- [`caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA`](https://huggingface.co/caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA)
-- [`caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA`](https://huggingface.co/caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA)
+### Adapters (Better Performance)
+- [`caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA-adapter`](https://huggingface.co/caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA-adapter)
+- [`caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA-adapter`](https://huggingface.co/caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA-adapter)
+### Merged Models
+- [`caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA-merged`](https://huggingface.co/caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA-merged)
+- [`caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA-merged`](https://huggingface.co/caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA-merged)
