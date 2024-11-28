@@ -1,5 +1,5 @@
 {   
-    "model_name": "meta-llama/Llama-3.2-1B-Instruct",
+    "model_name": "meta-llama/Llama-3.2-3B-Instruct",
     "dataset_name": "iamtarun/python_code_instructions_18k_alpaca",
     "dataset_split": "train",
     "attn_implementation": "eager",
@@ -19,8 +19,8 @@
     "sft_max_seq_length": 2048,
     "sft_packing": false,
 
-    "output_dir": "./models/finetuned_llama_1B",
-    "run_name": "Llama-3.2-1B-Instruct-finetune",
+    "output_dir": "./models/finetuned_llama_3B_low_lr_long_warmup",
+    "run_name": "Llama-3.2-3B-Instruct-finetune_low_lr_long_warmup",
     "report_to": "wandb",
     "eval_strategy": "epoch",
     "logging_steps": 1,
@@ -32,14 +32,14 @@
     "group_by_length": false,
     "disable_tqdm": false,
 
-    "num_train_epochs": 1,
+    "num_train_epochs": 10,
     "gradient_accumulation_steps": 2,
     "per_device_train_batch_size": 4,
     "per_device_eval_batch_size": 8,
     "optim": "paged_adamw_32bit",
-    "learning_rate": 1e-4,
+    "learning_rate": 1e-5,
     "weight_decay": 0.001,
-    "warmup_ratio": 0.03,
+    "warmup_ratio": 0.15,
     "lr_scheduler_type": "cosine",
     "max_grad_norm": 0.3
 }
