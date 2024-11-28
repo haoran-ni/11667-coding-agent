@@ -162,6 +162,8 @@ cython_debug/
 .vscode/
 .DS_Store
 wandb/
+models/
+configs/archive/
 slurm*
 .ruff_cache/
 .idea/
