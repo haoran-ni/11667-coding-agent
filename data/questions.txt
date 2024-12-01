@@ -1,4 +1,0 @@
-We have a function f(x)=x^2 + 3*x + 4, find the values of f(3), f(4), and f(5).
-Given two integers 4 and 12, find their largest common prime factor.
-Count the number of letter 'r' in the word 'Strawberrrry'.
-Write a function to calculate the average speed of an object given two sets of its one dimensional position and time. What is the average speed if it is on position 1.1 at time 0.5 and on position 2.5 at time 1.0? 
