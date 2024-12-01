@@ -1,0 +1,11 @@
+{
+    "1": "We have a function f(x)=x^2 + 3*x + 4, find the values of f(3), f(4), and f(5).",
+    "2": "Given two integers 4 and 12, find their largest common prime factor.",
+    "3": "Count the number of letter 'r' in the word 'Strawberrrry'.",
+    "4": "Write a function to calculate the average speed of an object given two pairs of its position and time in a one dimensional world, for example, (0, 1) and (1, 2) result in an average speed of 1. What is the average speed if it is on position 1.1 at time 0.5 and on position 2.5 at time 1.0?",
+    "5_leetcode_medium": "Given an integer n, return the count of all numbers with unique digits, x, where 0 <= x < 10n.\nExample 1:\nInput: n = 2\nOutput: 91\nExplanation: The answer should be the total numbers in the range of 0 ≤ x < 100, excluding 11,22,33,44,55,66,77,88,99\nExample 2:\nInput: n = 0\nOutput: 1\nConstraints:\n0 <= n <= 8",
+    "6": "Create your own function which can perform matrix multiplications. Remember to check if the dimension matches. Do not use numpy.",
+    "7_leetcode_hard": "Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:\n'.' Matches any single character.\n'*' Matches zero or more of the preceding element.\nThe matching should cover the entire input string (not partial).\n\nExample 1:\nInput: s = 'aa', p = 'a'\nOutput: false\n\nExplanation: 'a' does not match the entire string 'aa'.\n\nExample 2:\nInput: s = 'aa', p = 'a*'\nOutput: true\nExplanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes 'aa'.\n\nExample 3:\nInput: s = 'ab', p = '.*'\nOutput: true\nExplanation: '.*' means 'zero or more (*) of any character (.)'.",
+    "8": "Calculate the derivative of an arbitary function at a given x value. Your function should take two inputs: the target function and the x value. To do a simple test, you can define any function as input.",
+    "9": "Approximate the value of the integration of an arbitary function within a given region. Your function should take two inputs: the target function and the region to perform the integration. To do a simple test, you can define any function as input."
+}
