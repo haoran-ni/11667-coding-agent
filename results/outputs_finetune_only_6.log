@@ -1,0 +1,33 @@
+2024-12-02 11:27:36,901 - INFO - Loading model...
+2024-12-02 11:27:47,079 - INFO - Creating initial pipeline...
+2024-12-02 11:27:47,550 - INFO - Question: Create your own function which can perform matrix multiplications. Remember to check if the dimension matches. Do not use numpy.
+2024-12-02 11:27:47,550 - INFO - Generating initial codes and executing...
+2024-12-02 11:28:02,006 - INFO - 
+----------LLM Generated Python Codes----------
+
+def matrix_multiplication(a, b):
+    if len(a[0])!= len(b):
+        return "Matrices cannot be multiplied"
+    else:
+        result = [[0 for row in range(len(b[0]))] for col in range(len(a))]
+        for i in range(len(a)):
+            for j in range(len(b[0])):
+                for k in range(len(b)):
+                    result[i][j] += a[i][k] * b[k][j]
+        return result
+
+a = [[1, 2], [3, 4]]
+b = [[5, 6], [7, 8]]
+
+print(matrix_multiplication(a, b))
+
+----------End of LLM Generated Python Codes----------
+
+2024-12-02 11:28:02,006 - WARNING - Python REPL can execute arbitrary code. Use with caution.
+2024-12-02 11:28:02,089 - INFO - 
+----------Execution Result----------
+
+[[19, 22], [43, 50]]
+
+----------End of Execution Result----------
+2024-12-02 11:28:02,090 - INFO - Output generated. Exiting...

@@ -1,0 +1,34 @@
+2024-12-02 11:27:01,309 - INFO - Loading model...
+2024-12-02 11:27:11,541 - INFO - Creating initial pipeline...
+2024-12-02 11:27:12,026 - INFO - Question: Given an integer n, return the count of all numbers with unique digits, x, where 0 <= x < 10n.
+Example 1:
+Input: n = 2
+Output: 91
+Explanation: The answer should be the total numbers in the range of 0 ≤ x < 100, excluding 11,22,33,44,55,66,77,88,99
+Example 2:
+Input: n = 0
+Output: 1
+Constraints:
+0 <= n <= 8
+2024-12-02 11:27:12,027 - INFO - Generating initial codes and executing...
+2024-12-02 11:27:17,752 - INFO - 
+----------LLM Generated Python Codes----------
+
+def countNumbers(n):
+    res = 9
+    for i in range(1, n + 1):
+        res *= 9 - i
+    return res
+
+print(countNumbers(2))
+
+----------End of LLM Generated Python Codes----------
+
+2024-12-02 11:27:17,752 - WARNING - Python REPL can execute arbitrary code. Use with caution.
+2024-12-02 11:27:17,825 - INFO - 
+----------Execution Result----------
+
+504
+
+----------End of Execution Result----------
+2024-12-02 11:27:17,826 - INFO - Output generated. Exiting...

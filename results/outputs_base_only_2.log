@@ -1,0 +1,43 @@
+2024-12-02 11:38:52,186 - INFO - Loading model...
+2024-12-02 11:38:56,770 - INFO - Creating initial pipeline...
+2024-12-02 11:38:59,536 - INFO - Question: Given two integers 4 and 12, find their largest common prime factor.
+2024-12-02 11:38:59,536 - INFO - Generating initial codes and executing...
+2024-12-02 11:39:05,135 - INFO - 
+----------LLM Generated Python Codes----------
+
+def largest_common_prime_factor(a, b):
+    def is_prime(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n**0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
+
+    def prime_factors(n):
+        factors = set()
+        for i in range(2, int(n**0.5) + 1):
+            while n % i == 0:
+                factors.add(i)
+                n //= i
+        if n > 1:
+            factors.add(n)
+        return factors
+
+    factors_a = prime_factors(a)
+    factors_b = prime_factors(b)
+    common_factors = factors_a.intersection(factors_b)
+    return max(common_factors)
+
+print(largest_common_prime_factor(4, 12))
+
+----------End of LLM Generated Python Codes----------
+
+2024-12-02 11:39:05,136 - WARNING - Python REPL can execute arbitrary code. Use with caution.
+2024-12-02 11:39:05,226 - INFO - 
+----------Execution Result----------
+
+2
+
+----------End of Execution Result----------
+2024-12-02 11:39:05,227 - INFO - Output generated. Exiting...
