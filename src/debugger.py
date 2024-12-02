@@ -3,7 +3,7 @@ import json
 import logging
 import difflib
 import numpy as np
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, set_seed
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, set_seed, BitsAndBytesConfig
 from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_experimental.utilities import PythonREPL
@@ -18,7 +18,6 @@ log_output = "../outputs.log"
 prompts_path = "../data/system_prompts.json"
 questions_path = "../data/questions.json"
 question_key = "9"
-device = "cuda" if torch.cuda.is_available() else "cpu"
 agent_temperatures = [0.01, 0.4, 0.8, 1.2, 1.6]
 time_out = 60
 python = PythonREPL()
@@ -95,12 +94,29 @@ question = questions[question_key]
 
 # import models and data
 logging.info("Loading model...")
-model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# set the same bnb quantization config as training
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype="bfloat16",
+    bnb_4bit_use_double_quant=True
+)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    quantization_config=bnb_config,
+    low_cpu_mem_usage=True,
+    use_cache=True,
+    attn_implementation="eager",
+    torch_dtype=torch.bfloat16,
+    device_map={"": 0}
+)
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
+# set the same padding token as training, no actual effect
 if tokenizer.pad_token is None:
-    tokenizer.pad_token = tokenizer.eos_token
-
+    tokenizer.pad_token = "<|finetune_right_pad_id|>"
+    tokenizer.padding_side = "right"
 
 agents = []
 # initialize agents of different temperatures
@@ -110,7 +126,6 @@ for temperature in agent_temperatures:
                     model=model,
                     tokenizer=tokenizer,
                     max_new_tokens=2048,
-                    device=device,
                     temperature=temperature)
     hf = HuggingFacePipeline(pipeline=pipe)
     chat = ChatHuggingFace(llm=hf, verbose=False)
@@ -123,7 +138,6 @@ pipe = pipeline("text-generation",
                 model=model,
                 tokenizer=tokenizer,
                 max_new_tokens=2048,
-                device=device,
                 temperature=init_temperature)
 hf = HuggingFacePipeline(pipeline=pipe)
 chat = ChatHuggingFace(llm=hf, verbose=False)
