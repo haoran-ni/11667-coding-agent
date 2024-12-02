@@ -1,0 +1,32 @@
+- Dataset:
+https://huggingface.co/datasets/iamtarun/python_code_instructions_18k_alpaca (95% training, 4% validation, 1% test)
+
+
+- Base Model:
+1B: https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct
+3B: https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct
+
+
+- PEFT Finetuning Technique:  QLoRA (https://huggingface.co/papers/2305.14314)
+4-bit Quantization + Low Rank Adapters (LoRA)
+
+
+- Training and Evaluating Loss Curve: [loss_curve.png]
+
+
+(Pick the checkpoint with the best performance on the validation set.)
+
+
+- Finetuned Model:
+1B: https://huggingface.co/caizefeng18/llama-3.2-1b-instruct-python-alpaca-finetune-QLoRA-adapter (17000-step Checkpoint)
+3B: https://huggingface.co/caizefeng18/llama-3.2-3b-instruct-python-alpaca-finetune-QLoRA-adapter (12800-step Checkpoint)
+
+
+- Validation Perplexity:
+1B Base: 17.047
+1B Finetuned: 1.895
+3B Base: 13.925
+3B Finetuned: 1.801
+
+
+- Performance on Test Set: [generated answers in `1b_base_test.log` `1b_ft_test.log` `3b_base_test.log` `3b_ft_test.log`]

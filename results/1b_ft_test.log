@@ -1,0 +1,329 @@
+--------------------------------------------------
+--------------------------------------------------
+Categorize a given list of Wikipedia articles into their respective categories using a Python library.
+--------------------------------------------------
+Generated Response:
+```python
+import wikipedia
+
+# Get the list of articles
+articles = wikipedia.list_articles()
+
+# Create a dictionary to store the articles in each category
+categories = {}
+for article in articles:
+  category = article.category
+  if category not in categories:
+    categories[category] = []
+  categories[category].append(article.title)
+
+# Print the results
+for category, titles in categories.items():
+  print(f"{category}: {titles}")
+```
+--------------------------------------------------
+Target Response:
+```python
+import wikipedia
+
+articles = ['Advanced Dungeons & Dragons',
+            'The Legend of Zelda',
+            'Mario Kart']
+
+for article in articles:
+ page = wikipedia.page(title=article)
+ print(article, page.categories)
+
+# Output:
+# Advanced Dungeons & Dragons ['Books about games', 'Dungeons & Dragons', 'Role-playing game books']
+# The Legend of Zelda ['1986 video games', 'Action-adventure games', 'High fantasy video games', 'Nintendo franchises', 'The Legend of Zelda']
+# Mario Kart ['1992 video games', 'Kart racing video games', 'Mario Kart', 'Nintendo franchises', 'Racing video games', 'Video games developed in Japan']
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Create a Python program to compare two lists and return their intersection
+--------------------------------------------------
+Generated Response:
+```python
+def intersection(list1, list2):
+    intersection_list = []
+    for i in list1:
+        if i in list2:
+            intersection_list.append(i)
+    return intersection_list
+
+list1 = [1, 2, 3, 4, 5]
+list2 = [3, 4, 5, 6, 7]
+
+intersection_list = intersection(list1, list2)
+
+print("The intersection of two lists is: ")
+for i in intersection_list:
+    print(i)
+```
+--------------------------------------------------
+Target Response:
+```python
+def intersection(list1, list2):
+    intersection = [value for value in list1 if value in list2]
+    return intersection
+
+list1 = [1,2,3,4,5]
+list2 = [4,5,6,7,8]
+result = intersection(list1, list2)
+print(result) # prints [4,5]
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Design a Python script to generate a report containing summaries of the data in a table.
+--------------------------------------------------
+Generated Response:
+```python
+import pandas as pd
+
+# Load the data
+data = pd.read_csv('data.csv')
+
+# Calculate the summary of the data
+summary = data.describe()
+
+# Generate the report
+report = summary
+
+# Print the report
+print(report)
+```
+--------------------------------------------------
+Target Response:
+```python
+import pandas as pd 
+
+# Load data from the orders table 
+orders = pd.read_csv('orders.csv')
+
+# Generate summary statistics for the orders table 
+summary_stats = orders.describe()
+
+# Generate a report containing summary statistics 
+report = open('report.html', 'w') 
+report.write(summary_stats.to_html()) 
+report.close()
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Design a program in Python that prints the even numbers from 0 to 100.
+
+--------------------------------------------------
+Generated Response:
+```python
+for i in range(0, 101):
+    if i % 2 == 0:
+        print(i)
+```
+--------------------------------------------------
+Target Response:
+```python
+for i in range(0, 101): 
+    if (i % 2 == 0): 
+        print(i)
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Suggest a python code to get the common elements of a list of lists.
+--------------------------------------------------
+Generated Response:
+```python
+def get_common_elements(list_of_lists):
+    common_elements = set(list_of_lists[0])
+    for list_of_lists in list_of_lists[1:]:
+        common_elements &= set(list_of_lists[0])
+    return list(common_elements)
+
+list_of_lists = [[1, 2], [3, 4], [5, 6]]
+print(get_common_elements(list_of_lists))
+```
+--------------------------------------------------
+Target Response:
+```python
+def get_common_elements(list_of_lists): 
+    commons = []
+    for i in range(len(list_of_lists)): 
+        commons = list(set(commons).intersection(list_of_lists[i]))
+    return commons
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Write a Python program to multiply two numbers using recursion.
+
+--------------------------------------------------
+Generated Response:
+```python
+def multiply(a, b):
+  if b == 0:
+    return a
+  else:
+    return multiply(a, b-1) + a
+
+print(multiply(5, 7))
+```
+--------------------------------------------------
+Target Response:
+```python
+def multiply(x, y):
+	if y == 0:
+		return 0
+	else:
+		return x + multiply(x, y - 1)
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Generate a Python program to merge two sorted list and create a new sorted list
+--------------------------------------------------
+Generated Response:
+```python
+def merge_sorted_lists(list1, list2):
+    merged_list = []
+    i = 0
+    j = 0
+    
+    while i < len(list1) and j < len(list2):
+        if list1[i] < list2[j]:
+            merged_list.append(list1[i])
+            i += 1
+        else:
+            merged_list.append(list2[j])
+            j += 1
+            
+    while i < len(list1):
+        merged_list.append(list1[i])
+        i += 1
+        
+    while j < len(list2):
+        merged_list.append(list2[j])
+        j += 1
+        
+    return merged_list
+
+list1 = [1, 3, 5]
+list2 = [2, 4, 6]
+print(merge_sorted_lists(list1, list2)) # [1, 2, 3, 4, 5, 6]
+```
+--------------------------------------------------
+Target Response:
+```python
+list_a = [1, 3, 5, 7]
+list_b = [2, 4, 6, 8]
+
+def merge_sorted_lists(list_a, list_b):
+    merged_list = []
+    i = 0
+    j = 0
+    while i < len(list_a) and j < len(list_b):
+        if list_a[i] < list_b[j]:
+            merged_list.append(list_a[i])
+            i+=1
+        else:
+            merged_list.append(list_b[j])
+            j+=1
+    while i < len(list_a):
+        merged_list.append(list_a[i])
+        i+=1
+    while j < len(list_b):
+        merged_list.append(list_b[j])
+        j+=1
+    return merged_list
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Provide an approach to compare two strings in Python.
+
+--------------------------------------------------
+Generated Response:
+```python
+def compare_strings(str1, str2):
+  if str1 == str2:
+    return True
+  else:
+    return False
+```
+--------------------------------------------------
+Target Response:
+```python
+def compare_strings(str1, str2):
+    if len(str1) != len(str2):
+        return False
+    else:
+        for i in range(len(str1)):
+            if str1[i] != str2[i]:
+                return False
+    return True
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Optimize the following Python code for calculating the Fibonacci numbers up to n.
+--------------------------------------------------
+Generated Response:
+```python
+def fibonacci(n):
+ a = 0
+ b = 1
+ for _ in range(n):
+ a, b = b, a + b
+ return a
+```
+--------------------------------------------------
+Target Response:
+```python
+def fibonacci(n):
+ # Initialize a memoization dictionary
+ memo = {
+ 0: 0,
+ 1: 1
+ }
+ 
+ # If n is in the memoization dictionary, return the value
+ if n in memo:
+ return memo[n]
+ 
+ # Calculate the Fibonacci number
+ if n > 1:
+ memo[n] = fibonacci(n-1) + fibonacci(n-2)
+ 
+ return memo[n]
+
+print(fibonacci(10))
+```
+
+--------------------------------------------------
+--------------------------------------------------
+Design a Python program to calculate simple interest given the principal amount, rate of interest and duration.
+
+--------------------------------------------------
+Generated Response:
+```python
+def calculate_interest(principal, rate, duration):
+    interest = principal * rate * duration
+    return interest
+
+interest = calculate_interest(1000, 10, 2)
+print("The interest is: ", interest)
+```
+--------------------------------------------------
+Target Response:
+```python
+def calculateSimpleInterest(principal, rate, duration):
+    if rate != 0:
+        interest = (principal * rate * duration) / 100
+    else:
+        interest = 0
+    return interest
+```
+
