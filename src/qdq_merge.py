@@ -104,7 +104,7 @@ def main():
 
         # Note: This function outputs the dequantized model without merging the adapter yet
         # The code below it will merge the adapter and then save it to disk
-        model = dequantize_model(model, tok, to='output-folder-for-dequantized-model-here')
+        model = dequantize_model(model, tok)
 
         print(model)
         model = PeftModel.from_pretrained(model=model, model_id=adapter_path)
