@@ -9,7 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments,
     BitsAndBytesConfig, pipeline, LlamaForCausalLM
 
 from configuration import ModelConfig, CustomBnBConfig, CustomLoRAConfig, SFTConfig, EvaluationConfig
-from templates import format_user_text, format_assistant_text
+from templates import format_user_text, format_assistant_text, format_user_text_1b, format_user_text_3b
 
 
 def main():
@@ -42,16 +42,6 @@ def main():
 
     if not eval_config.eval_on_validation:
         eval_dataset = test_dataset
-
-    # Format the dataset to be used in the instruct model
-    def format_instruct(sample):
-        output_json = []
-        for i in range(len(sample['instruction'])):
-            user_text = format_user_text(sample['instruction'][i], sample['input'][i])
-            assistant_text = format_assistant_text(sample['output'][i])
-            row_json = [{"role": "user", "content": user_text}, {"role": "assistant", "content": assistant_text}]
-            output_json.append(row_json)
-        return tokenizer.apply_chat_template(output_json, tokenize=False)
 
     # BitsAndBytesConfig int-4 config
     bnb_config = BitsAndBytesConfig(
@@ -112,12 +102,16 @@ def main():
         tokenizer.pad_token = "<|finetune_right_pad_id|>"
         tokenizer.padding_side = "right"
 
+    # format_user_text_func = format_user_text
+    # format_user_text_func = format_user_text_1b
+    format_user_text_func = format_user_text_3b
+
     # Format the dataset to be used in the instruct model
     def format_message(dataset):
         message_json = []
         target_response_json = []
         for i in range(len(dataset['instruction'])):
-            user_text = format_user_text(dataset['instruction'][i], dataset['input'][i])
+            user_text = format_user_text_func(dataset['instruction'][i], dataset['input'][i])
             assistant_text = format_assistant_text(dataset['output'][i])
             user_text_json = [{"role": "user", "content": user_text}]
             message_json.append(user_text_json)
