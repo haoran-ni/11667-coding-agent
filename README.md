@@ -1,6 +1,6 @@
 # Self-debugging coding agent
 
-A coding agent finetuned from `meta-llama/Llama-3.2-1B-Instruct` and `meta-llama/Llama-3.2-3B-Instruct`, capable of debugging with self-iterations.
+A coding agent finetuned from `meta-llama/Llama-3.2-1B-Instruct` and `meta-llama/Llama-3.2-3B-Instruct` capable of debugging with self-iterations.
 
 ## Running
 The running tests are done on NERSC. Please make sure `cudatoolkit/12.4` is loaded before setting up the conda environment.
